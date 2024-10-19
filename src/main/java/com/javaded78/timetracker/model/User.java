@@ -22,10 +22,10 @@ import lombok.Setter;
 import java.util.List;
 import java.util.Set;
 
-@Entity
-@Table(name = "t_users")
 @Getter
 @Setter
+@Entity
+@Table(name = "t_users")
 @NoArgsConstructor
 @AllArgsConstructor
 public class User implements BaseEntity<Long> {

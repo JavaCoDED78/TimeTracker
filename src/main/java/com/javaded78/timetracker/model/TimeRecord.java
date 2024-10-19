@@ -16,10 +16,10 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "t_time_records")
 @Setter
 @Getter
+@Entity
+@Table(name = "t_time_records")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

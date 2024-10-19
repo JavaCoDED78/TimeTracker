@@ -13,10 +13,10 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "t_project")
-@Setter
-@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Project implements BaseEntity<Long> {
