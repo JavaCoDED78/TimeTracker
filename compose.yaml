@@ -1,15 +1,25 @@
+version: '3'
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db-data:
+    driver: local
+
 services:
-  postgres-time-tracker:
-    container_name: postgres-time-tracker
-    hostname: postgres-time-tracker
+  db:
     image: postgres:latest
-    environment:
-      POSTGRES_DB: time_tracker
-      POSTGRES_USER: ${POSTGRES_USERNAME}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      PGDATA: /data/postgres
-    volumes:
-      - ../data:/data/postgres
+    container_name: postgres-time-tracker
+    networks:
+      - app-network
     ports:
-      - "5432:5432"
-    restart: unless-stopped
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=${POSTGRES_USERNAME}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DATABASE}
+    volumes:
+      - ./src/main/resources/db-init:/docker-entrypoint-initdb.d
+      - db-data:/var/lib/postgresql/data
