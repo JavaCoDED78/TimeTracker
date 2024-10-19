@@ -1,9 +1,15 @@
 services:
-  postgres:
-    image: 'postgres:latest'
+  postgres-time-tracker:
+    container_name: postgres-time-tracker
+    hostname: postgres-time-tracker
+    image: postgres:latest
     environment:
-      - 'POSTGRES_DB=mydatabase'
-      - 'POSTGRES_PASSWORD=secret'
-      - 'POSTGRES_USER=myuser'
+      POSTGRES_DB: time_tracker
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: /data/postgres
+    volumes:
+      - ../data:/data/postgres
     ports:
-      - '5432'
+      - "5432:5432"
+    restart: unless-stopped
