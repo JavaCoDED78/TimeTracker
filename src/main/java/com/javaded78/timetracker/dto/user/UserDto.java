@@ -12,6 +12,7 @@ import lombok.Builder;
 @Builder
 public record UserDto(
 
+        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
         @NotNull(message = "{id.notnull}", groups = OnUpdate.class)
         Long id,
 
