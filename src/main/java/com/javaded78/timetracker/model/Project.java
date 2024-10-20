@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "t_project")
+@Table(name = "t_projects")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Project implements BaseEntity<Long> {
@@ -31,6 +31,6 @@ public class Project implements BaseEntity<Long> {
     @Column(name = "c_description")
     private String description;
 
-    @Column(name = "c_start")
+    @Column(name = "c_start", nullable = false)
     private LocalDateTime start;
 }
