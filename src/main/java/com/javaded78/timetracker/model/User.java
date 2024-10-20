@@ -16,6 +16,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -46,5 +47,5 @@ public class User implements BaseEntity<Long> {
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "t_users_roles")
     @Enumerated(value = EnumType.STRING)
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 }

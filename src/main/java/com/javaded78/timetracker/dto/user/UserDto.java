@@ -14,25 +14,25 @@ public record UserDto(
         @JsonProperty(access = JsonProperty.Access.READ_ONLY)
         Long id,
 
-        @Email(message = "{email.invalid}", groups = {OnCreate.class, OnUpdate.class})
-        @NotBlank(message = "{email.notnull}", groups = {OnCreate.class, OnUpdate.class})
+        @Email(message = "{user.email.invalid}", groups = {OnCreate.class, OnUpdate.class})
+        @NotBlank(message = "{user.email.notnull}", groups = {OnCreate.class, OnUpdate.class})
         String email,
 
         @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-        @Size(min = 6, max = 32, message = "{password.size}", groups = {OnCreate.class, OnUpdate.class})
-        @NotBlank(message = "{password.notnull}", groups = {OnCreate.class, OnUpdate.class})
+        @Size(min = 6, max = 32, message = "{user.password.size}", groups = {OnCreate.class, OnUpdate.class})
+        @NotBlank(message = "{user.password.notnull}", groups = {OnCreate.class, OnUpdate.class})
         String password,
 
-        @Size(min = 5, max = 50, message = "{firstname.size}",
+        @Size(min = 5, max = 50, message = "{user.firstname.size}",
                 groups = {OnCreate.class, OnUpdate.class}
         )
-        @NotBlank(message = "{firstname.notnull}", groups = {OnCreate.class, OnUpdate.class})
+        @NotBlank(message = "{user.firstname.notnull}", groups = {OnCreate.class, OnUpdate.class})
         String firstname,
 
-        @Size(min = 5, max = 50, message = "{lastname.size}",
+        @Size(min = 5, max = 50, message = "{user.lastname.size}",
                 groups = {OnCreate.class, OnUpdate.class}
         )
-        @NotBlank(message = "{lastname.notnull}", groups = {OnCreate.class, OnUpdate.class})
+        @NotBlank(message = "{user.lastname.notnull}", groups = {OnCreate.class, OnUpdate.class})
         String lastname
 ) {
 }
