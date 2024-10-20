@@ -1,5 +1,6 @@
 package com.javaded78.timetracker.controller;
 
+import com.javaded78.timetracker.dto.PaginatedResponse;
 import com.javaded78.timetracker.dto.user.UserDto;
 import com.javaded78.timetracker.dto.validation.OnCreate;
 import com.javaded78.timetracker.service.UserService;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -25,7 +27,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/register")
+    @PostMapping()
     public ResponseEntity<UserDto> register(
             @Validated(OnCreate.class)
             @RequestBody final UserDto userDto) {
@@ -34,7 +36,7 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<UserDto>> getAll(Pageable pageable) {
+    public ResponseEntity<PaginatedResponse<UserDto>> getAll(Pageable pageable) {
         return ResponseEntity.ok(userService.getAll(pageable));
     }
 
@@ -43,12 +45,16 @@ public class UserController {
         return ResponseEntity.ok(userService.getById(id));
     }
 
-    @PutMapping
-    public ResponseEntity<UserDto> update(
-            @Validated
-            @RequestBody final UserDto userDto) {
+    @GetMapping("/email")
+    public ResponseEntity<UserDto> getUserByEmail(@RequestParam("email") String email) {
+        return ResponseEntity.ok(userService.getUserByEmail(email));
+    }
 
-        return ResponseEntity.ok(userService.update(userDto));
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDto> update(
+            @PathVariable Long id,
+            @Validated @RequestBody UserDto userDto) {
+        return ResponseEntity.ok(userService.update(id, userDto));
     }
 
     @DeleteMapping("/{id}")

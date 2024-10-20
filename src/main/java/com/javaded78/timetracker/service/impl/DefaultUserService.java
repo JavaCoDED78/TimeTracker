@@ -1,5 +1,6 @@
 package com.javaded78.timetracker.service.impl;
 
+import com.javaded78.timetracker.dto.PaginatedResponse;
 import com.javaded78.timetracker.dto.user.UserDto;
 import com.javaded78.timetracker.exception.ResourceNotFoundException;
 import com.javaded78.timetracker.mapper.UserMapper;
@@ -40,17 +41,16 @@ public class DefaultUserService implements UserService {
     }
 
     private void check(UserDto userDto) {
-        if (existsByEmail(userDto.email())) {
-            throw new IllegalStateException(
-                    messageService.generateMessage("error.account.already_exists", userDto.email())
-            );
+        if (userRepository.existsByEmail(userDto.email())) {
+            throw new IllegalStateException(messageService.generateMessage("error.account.already_exists", userDto.email()));
         }
     }
 
+
     @Override
-    public Page<UserDto> getAll(Pageable pageable) {
-        return userRepository.findAll(pageable)
-                .map(userMapper::toDto);
+    public PaginatedResponse<UserDto> getAll(Pageable pageable) {
+        Page<UserDto> users = userRepository.findAll(pageable).map(userMapper::toDto);
+        return new PaginatedResponse<>(users);
     }
 
     @Override
@@ -67,21 +67,30 @@ public class DefaultUserService implements UserService {
 
     @Override
     @Transactional
-    public UserDto update(UserDto userDto) {
-        User existingUser = getUserById(userDto.id());
-        existingUser.setUsername(userDto.username());
+    public UserDto update(Long id, UserDto userDto) {
+        User existingUser = getUserById(id);
+        existingUser.setFirstname(userDto.firstname());
+        existingUser.setLastname(userDto.lastname());
         existingUser.setEmail(userDto.email());
         existingUser.setPassword(passwordEncoder.encode(userDto.password()));
         return userMapper.toDto(userRepository.saveAndFlush(existingUser));
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
-        userRepository.deleteById(id);
+        User user = getUserById(id);
+        userRepository.delete(user);
     }
 
     @Override
-    public boolean existsByEmail(String email) {
-        return userRepository.existsByEmail(email);
+    public UserDto getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .map(userMapper::toDto)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        messageService.generateMessage("error.entity.not_found", email))
+                );
     }
 }
+
+
