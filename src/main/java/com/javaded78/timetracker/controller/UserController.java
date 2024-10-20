@@ -2,6 +2,7 @@ package com.javaded78.timetracker.controller;
 
 import com.javaded78.timetracker.dto.user.UserDto;
 import com.javaded78.timetracker.dto.validation.OnCreate;
+import com.javaded78.timetracker.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +35,7 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<Page<UserDto>> getAll(Pageable pageable) {
-        return ResponseEntity.ok(userService.getAll());
+        return ResponseEntity.ok(userService.getAll(pageable));
     }
 
     @GetMapping("/{id}")
