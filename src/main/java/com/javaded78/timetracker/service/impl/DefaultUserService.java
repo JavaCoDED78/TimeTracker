@@ -46,10 +46,10 @@ public class DefaultUserService implements UserService {
         }
     }
 
-
     @Override
     public PaginatedResponse<UserDto> getAll(Pageable pageable) {
-        Page<UserDto> users = userRepository.findAll(pageable).map(userMapper::toDto);
+        Page<UserDto> users = userRepository.findAll(pageable)
+                .map(userMapper::toDto);
         return new PaginatedResponse<>(users);
     }
 
