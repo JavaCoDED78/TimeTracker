@@ -1,8 +1,10 @@
 package com.javaded78.timetracker.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -15,7 +17,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Setter
@@ -32,12 +33,13 @@ public class TimeRecord implements BaseEntity<Long> {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @ManyToOne
     @JoinColumn(name = "project_id")
+    @JsonBackReference
     private Project project;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "c_project_state")
+    private ProjectState projectState;
 
     @Column(name = "c_start_time")
     private LocalDateTime startTime;
@@ -47,7 +49,4 @@ public class TimeRecord implements BaseEntity<Long> {
 
     @Column(name = "c_description")
     private String description;
-
-    @Column(name = "c_duration")
-    private Duration duration;
 }
