@@ -19,7 +19,6 @@ public record TimeRecordResponse(
         @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
 
-        LocalDateTime endTime,
-        String description
+        LocalDateTime endTime
 ) {
 }

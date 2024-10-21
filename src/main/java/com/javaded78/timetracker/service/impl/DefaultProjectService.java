@@ -2,12 +2,16 @@ package com.javaded78.timetracker.service.impl;
 
 import com.javaded78.timetracker.dto.PaginatedResponse;
 import com.javaded78.timetracker.dto.project.ProjectDto;
+import com.javaded78.timetracker.dto.project.ProjectStateDto;
 import com.javaded78.timetracker.exception.ResourceNotFoundException;
 import com.javaded78.timetracker.mapper.ProjectMapper;
 import com.javaded78.timetracker.model.Project;
+import com.javaded78.timetracker.model.ProjectState;
+import com.javaded78.timetracker.model.TimeRecord;
 import com.javaded78.timetracker.repository.ProjectRepository;
 import com.javaded78.timetracker.service.MessageSourceService;
 import com.javaded78.timetracker.service.ProjectService;
+import com.javaded78.timetracker.service.TimeRecordService;
 import com.javaded78.timetracker.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,6 +30,7 @@ public class DefaultProjectService implements ProjectService {
     private final ProjectRepository projectRepository;
     private final ProjectMapper projectMapper;
     private final MessageSourceService messageService;
+    private final TimeRecordService timeRecordService;
 
     @Override
     public PaginatedResponse<ProjectDto> getAll(Pageable pageable) {
@@ -70,4 +75,28 @@ public class DefaultProjectService implements ProjectService {
         Project project = getProjectById(id);
         projectRepository.delete(project);
     }
+
+    @Override
+    @Transactional
+    public ProjectStateDto start(Long id) {
+        Project newProject = getProjectById(id);
+        TimeRecord record = new TimeRecord();
+        record.setProject(newProject);
+        record.setProjectState(ProjectState.ONGOING);
+        record.setStartTime(LocalDateTime.now());
+        TimeRecord savedTimeRecord = timeRecordService.save(record);
+        return projectMapper.toStateDto(newProject, savedTimeRecord.getProjectState());
+    }
+
+    @Override
+    @Transactional
+    public ProjectStateDto stop(Long id) {
+        Project newProject = getProjectById(id);
+        TimeRecord record = timeRecordService.getStaringRecord(newProject);
+        record.setEndTime(LocalDateTime.now());
+        record.setProjectState(ProjectState.USER_STOPPED);
+        timeRecordService.save(record);
+        return projectMapper.toStateDto(record.getProject(), ProjectState.USER_STOPPED);
+    }
+
 }

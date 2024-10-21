@@ -3,9 +3,11 @@ package com.javaded78.timetracker.controller;
 import com.javaded78.timetracker.dto.PaginatedResponse;
 import com.javaded78.timetracker.dto.user.UserDto;
 import com.javaded78.timetracker.dto.validation.OnCreate;
+import com.javaded78.timetracker.dto.validation.OnUpdate;
 import com.javaded78.timetracker.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,7 +33,7 @@ public class UserController {
             @Validated(OnCreate.class)
             @RequestBody final UserDto userDto) {
 
-        return ResponseEntity.ok(userService.register(userDto));
+        return new ResponseEntity<>(userService.register(userDto), HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -52,7 +54,7 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<UserDto> update(
             @PathVariable Long id,
-            @Validated @RequestBody UserDto userDto) {
+            @Validated(OnUpdate.class) @RequestBody UserDto userDto) {
         return ResponseEntity.ok(userService.update(id, userDto));
     }
 

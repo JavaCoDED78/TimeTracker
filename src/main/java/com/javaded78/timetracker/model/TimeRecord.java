@@ -46,7 +46,4 @@ public class TimeRecord implements BaseEntity<Long> {
 
     @Column(name = "c_end_time")
     private LocalDateTime endTime;
-
-    @Column(name = "c_description")
-    private String description;
 }

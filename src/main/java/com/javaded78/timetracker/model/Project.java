@@ -43,7 +43,7 @@ public class Project implements BaseEntity<Long> {
     @Column(name = "c_created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     @JsonBackReference
     private User user;
