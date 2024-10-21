@@ -3,13 +3,14 @@ package com.javaded78.timetracker.dto.user;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
 @Builder
 public record UserUpdateDto(
 
-        @NotBlank(message = "{user.id.notnull}")
+        @NotNull(message = "{user.id.notnull}")
         Long id,
 
         @Email(message = "{user.email.invalid}")

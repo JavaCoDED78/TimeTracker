@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.javaded78.timetracker.model.Status;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -11,8 +12,7 @@ import java.time.LocalDateTime;
 
 public record TaskUpdateDto(
 
-        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-        @NotBlank(message = "{task.id.notnull}")
+        @NotNull(message = "{task.id.notnull}")
         Long id,
 
         @Size(min = 6, max = 255, message = "{task.name.size}")

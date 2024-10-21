@@ -43,14 +43,14 @@ public class UserController {
 
     @PostMapping()
     public ResponseEntity<UserResponseDto> register(
-            @Validated(OnCreate.class)
+            @Validated
             @RequestBody final UserCreateDto userCreateDto) {
         User user = userMapper.createdToEntity(userCreateDto);
         User registeredUser = userService.register(user);
         return new ResponseEntity<>(userMapper.toDto(registeredUser), HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     public ResponseEntity<UserResponseDto> update(@Validated @RequestBody UserUpdateDto userUpdateDto) {
         User user = userMapper.updatedToEntity(userUpdateDto);
         User updatedUser = userService.update(user);
