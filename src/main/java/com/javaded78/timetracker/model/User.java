@@ -1,5 +1,7 @@
 package com.javaded78.timetracker.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -10,12 +12,14 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -43,9 +47,16 @@ public class User implements BaseEntity<Long> {
     @Column(name = "c_password", nullable = false)
     private String password;
 
+    @Column(name = "c_created_at", nullable = false)
+    private LocalDateTime createdAt;
+
     @Column(name = "c_role")
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "t_users_roles")
     @Enumerated(value = EnumType.STRING)
     private Set<Role> roles = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @JsonManagedReference
+    private Set<Project> tasks = new HashSet<>();
 }
