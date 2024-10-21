@@ -1,9 +1,6 @@
 package com.javaded78.timetracker.service.impl;
 
-import com.javaded78.timetracker.dto.PaginatedResponse;
-import com.javaded78.timetracker.dto.user.UserDto;
 import com.javaded78.timetracker.exception.ResourceNotFoundException;
-import com.javaded78.timetracker.mapper.UserMapper;
 import com.javaded78.timetracker.model.Role;
 import com.javaded78.timetracker.model.User;
 import com.javaded78.timetracker.repository.UserRepository;
@@ -16,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Set;
 
 @Service
@@ -25,77 +21,74 @@ import java.util.Set;
 public class DefaultUserService implements UserService {
 
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
-    private final MessageSourceService messageService;
+    private final MessageSourceService messageSourceService;
 
     @Override
-    @Transactional
-    public UserDto register(UserDto userDto) {
-        check(userDto);
-        User newUser = userMapper.toEntity(userDto);
-        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
-        newUser.setRoles(Set.of(Role.ROLE_USER));
-        newUser.setCreatedAt(LocalDateTime.now());
-        User user = userRepository.saveAndFlush(newUser);
-        return userMapper.toDto(user);
-    }
-
-    private void check(UserDto userDto) {
-        if (userRepository.existsByEmail(userDto.email())) {
-            throw new IllegalStateException(messageService.generateMessage("error.account.already_exists", userDto.email()));
-        }
+    public Page<User> getAll(Pageable pageable) {
+        return userRepository.findAll(pageable);
     }
 
     @Override
-    public PaginatedResponse<UserDto> getAll(Pageable pageable) {
-        Page<UserDto> users = userRepository.findAll(pageable)
-                .map(userMapper::toDto);
-        return new PaginatedResponse<>(users);
-    }
-
-    @Override
-    public UserDto getById(Long id) {
-        return userMapper.toDto(getUserById(id));
-    }
-
-    private User getUserById(Long id) {
+    public User getById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        messageService.generateMessage("error.entity.not_found", id))
+                        messageSourceService.generateMessage("error.entity.id.not_found", id))
+                );
+    }
+
+    @Override
+    public User getByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        messageSourceService.generateMessage("error.entity.username.not_found", username))
                 );
     }
 
     @Override
     @Transactional
-    public UserDto update(Long id, UserDto userDto) {
-        User existingUser = getUserById(id);
-        existingUser.setFirstname(userDto.firstname());
-        existingUser.setLastname(userDto.lastname());
-        existingUser.setEmail(userDto.email());
-        existingUser.setPassword(passwordEncoder.encode(userDto.password()));
-        return userMapper.toDto(userRepository.saveAndFlush(existingUser));
+    public User update(User user) {
+        User existing = getById(user.getId());
+        existing.setFirstname(user.getFirstname());
+        existing.setLastname(user.getLastname());
+        user.setUsername(user.getUsername());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+        return user;
+    }
+
+    @Override
+    @Transactional
+    public User register(User user) {
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            throw new IllegalStateException(
+                    messageSourceService.generateMessage("error.account.already_exists", user.getUsername())
+            );
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        Set<Role> roles = Set.of(Role.ROLE_USER);
+        user.setRoles(roles);
+        userRepository.save(user);
+        return user;
+    }
+
+    @Override
+    public boolean isTaskOwner(Long userId, Long taskId) {
+        return userRepository.isTaskOwner(userId, taskId);
+    }
+
+    @Override
+    public User getTaskAuthor(Long taskId) {
+        return userRepository.findTaskAuthor(taskId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        messageSourceService.generateMessage("error.entity.id.not_found", taskId))
+                );
     }
 
     @Override
     @Transactional
     public void delete(Long id) {
-        User user = getUserById(id);
-        userRepository.delete(user);
-    }
-
-    @Override
-    public UserDto getUserDtoByEmail(String email) {
-        User user = getUserByEmail(email);
-        return userMapper.toDto(user);
-    }
-
-    @Override
-    public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        messageService.generateMessage("error.entity.not_found", email))
-                );
+        userRepository.deleteById(id);
     }
 }
 

@@ -1,24 +1,25 @@
 package com.javaded78.timetracker.service;
 
-import com.javaded78.timetracker.dto.PaginatedResponse;
-import com.javaded78.timetracker.dto.user.UserDto;
 import com.javaded78.timetracker.model.User;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface UserService {
 
-    UserDto register(UserDto userDto);
+    Page<User> getAll(Pageable pageable);
 
-    PaginatedResponse<UserDto> getAll(Pageable pageable);
+    User getById(Long id);
 
-    UserDto getById(Long id);
+    User getByUsername(String username);
 
-    UserDto update(Long id, UserDto userDto);
+    User update(User user);
+
+    User register(User user);
+
+    boolean isTaskOwner(Long userId, Long taskId);
+
+    User getTaskAuthor(Long taskId);
 
     void delete(Long id);
-
-    UserDto getUserDtoByEmail(String email);
-
-    User getUserByEmail(String email);
 
 }

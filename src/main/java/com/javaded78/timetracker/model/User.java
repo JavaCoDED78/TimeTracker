@@ -37,17 +37,17 @@ public class User implements BaseEntity<Long> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "firstname", nullable = false)
-    private String firstname;
-
-    @Column(name = "lastname", nullable = false)
-    private String lastname;
-
     @Column(name = "username", unique = true, nullable = false)
     private String username;
 
     @Column(name = "password", nullable = false)
     private String password;
+
+    @Column(name = "firstname", nullable = false)
+    private String firstname;
+
+    @Column(name = "lastname", nullable = false)
+    private String lastname;
 
     @Column(name = "role")
     @ElementCollection(fetch = FetchType.EAGER)

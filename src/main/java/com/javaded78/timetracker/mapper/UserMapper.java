@@ -1,16 +1,22 @@
 package com.javaded78.timetracker.mapper;
 
-import com.javaded78.timetracker.dto.user.UserDto;
+import com.javaded78.timetracker.dto.user.UserCreateDto;
+import com.javaded78.timetracker.dto.user.UserResponseDto;
+import com.javaded78.timetracker.dto.user.UserUpdateDto;
 import com.javaded78.timetracker.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
-public interface UserMapper extends Mappable<User, UserDto> {
+public interface UserMapper extends Mappable<User, UserResponseDto> {
 
-    @Override
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "tasks", ignore = true)
     @Mapping(target = "roles", ignore = true)
-    @Mapping(target = "projects", ignore = true)
-    User toEntity(UserDto dto);
+    User createdToEntity(UserCreateDto userCreateDto);
 
+    @Mapping(target = "tasks", ignore = true)
+    @Mapping(target = "roles", ignore = true)
+    User updatedToEntity(UserUpdateDto userUpdateDto);
 }

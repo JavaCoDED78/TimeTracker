@@ -1,30 +1,31 @@
-package com.javaded78.timetracker.dto.project;
+package com.javaded78.timetracker.dto.task;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.javaded78.timetracker.dto.validation.OnCreate;
 import com.javaded78.timetracker.model.Status;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
-public record ProjectStateDto(
+public record TaskUpdateDto(
 
         @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+        @NotBlank(message = "{task.id.notnull}")
         Long id,
+
+        @Size(min = 6, max = 255, message = "{task.name.size}")
+        @NotBlank(message = "{task.name.notnull}")
         String title,
+
+        @Size(max = 5000, message = "{task.description.size}")
         String description,
 
-        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
         @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
-        LocalDateTime createdAt,
+        LocalDateTime expirationDate,
 
-        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-        @Email(message = "{user.email.invalid}" , groups = {OnCreate.class})
-        @NotBlank(message = "{user.email.notnull}", groups = {OnCreate.class})
-        Status state
+        Status status
 ) {
 }
