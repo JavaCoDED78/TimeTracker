@@ -48,7 +48,7 @@ public class Project implements BaseEntity<Long> {
     @JsonBackReference
     private User user;
 
-    @OneToMany(mappedBy = "task", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     @JsonManagedReference
-    private Set<TimeRecord> timeLogs = new HashSet<>();
+    private Set<TimeRecord> timeRecords = new HashSet<>();
 }

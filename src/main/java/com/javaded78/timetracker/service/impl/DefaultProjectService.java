@@ -8,17 +8,21 @@ import com.javaded78.timetracker.model.Project;
 import com.javaded78.timetracker.repository.ProjectRepository;
 import com.javaded78.timetracker.service.MessageSourceService;
 import com.javaded78.timetracker.service.ProjectService;
+import com.javaded78.timetracker.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class DefaultProjectService implements ProjectService {
 
+    private final UserService userService;
     private final ProjectRepository projectRepository;
     private final ProjectMapper projectMapper;
     private final MessageSourceService messageService;
@@ -46,6 +50,8 @@ public class DefaultProjectService implements ProjectService {
     @Transactional
     public ProjectDto add(ProjectDto projectDto) {
         Project newProject = projectMapper.toEntity(projectDto);
+        newProject.setUser(userService.getUserByEmail(projectDto.email()));
+        newProject.setCreatedAt(LocalDateTime.now());
         return projectMapper.toDto(projectRepository.saveAndFlush(newProject));
     }
 
@@ -55,7 +61,6 @@ public class DefaultProjectService implements ProjectService {
         Project existingProject = getProjectById(id);
         existingProject.setTitle(projectDto.title());
         existingProject.setDescription(projectDto.description());
-        existingProject.setStart(projectDto.start());
         return projectMapper.toDto(projectRepository.saveAndFlush(existingProject));
     }
 

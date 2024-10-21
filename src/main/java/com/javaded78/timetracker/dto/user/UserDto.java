@@ -1,5 +1,6 @@
 package com.javaded78.timetracker.dto.user;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.javaded78.timetracker.dto.validation.OnCreate;
 import com.javaded78.timetracker.dto.validation.OnUpdate;
@@ -7,6 +8,9 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDateTime;
 
 @Builder
 public record UserDto(
@@ -33,6 +37,10 @@ public record UserDto(
                 groups = {OnCreate.class, OnUpdate.class}
         )
         @NotBlank(message = "{user.lastname.notnull}", groups = {OnCreate.class, OnUpdate.class})
-        String lastname
-) {
+        String lastname,
+
+        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+        @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+        LocalDateTime createdAt) {
 }

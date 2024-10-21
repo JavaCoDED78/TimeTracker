@@ -2,10 +2,8 @@ package com.javaded78.timetracker.service;
 
 import com.javaded78.timetracker.dto.PaginatedResponse;
 import com.javaded78.timetracker.dto.user.UserDto;
-import org.springframework.data.domain.Page;
+import com.javaded78.timetracker.model.User;
 import org.springframework.data.domain.Pageable;
-
-import java.util.Optional;
 
 public interface UserService {
 
@@ -19,5 +17,8 @@ public interface UserService {
 
     void delete(Long id);
 
-    UserDto getUserByEmail(String email);
+    UserDto getUserDtoByEmail(String email);
+
+    User getUserByEmail(String email);
+
 }

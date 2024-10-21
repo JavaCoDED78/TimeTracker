@@ -5,7 +5,6 @@ import com.javaded78.timetracker.dto.user.UserDto;
 import com.javaded78.timetracker.dto.validation.OnCreate;
 import com.javaded78.timetracker.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -47,7 +46,7 @@ public class UserController {
 
     @GetMapping("/email")
     public ResponseEntity<UserDto> getUserByEmail(@RequestParam("email") String email) {
-        return ResponseEntity.ok(userService.getUserByEmail(email));
+        return ResponseEntity.ok(userService.getUserDtoByEmail(email));
     }
 
     @PutMapping("/{id}")

@@ -58,5 +58,5 @@ public class User implements BaseEntity<Long> {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     @JsonManagedReference
-    private Set<Project> tasks = new HashSet<>();
+    private Set<Project> projects = new HashSet<>();
 }

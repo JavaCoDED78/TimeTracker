@@ -10,5 +10,7 @@ public interface UserMapper extends Mappable<User, UserDto> {
 
     @Override
     @Mapping(target = "roles", ignore = true)
+    @Mapping(target = "projects", ignore = true)
     User toEntity(UserDto dto);
+
 }

@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Service
@@ -34,8 +35,8 @@ public class DefaultUserService implements UserService {
         check(userDto);
         User newUser = userMapper.toEntity(userDto);
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
-        Set<Role> roles = Set.of(Role.ROLE_USER);
-        newUser.setRoles(roles);
+        newUser.setRoles(Set.of(Role.ROLE_USER));
+        newUser.setCreatedAt(LocalDateTime.now());
         User user = userRepository.saveAndFlush(newUser);
         return userMapper.toDto(user);
     }
@@ -84,9 +85,14 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public UserDto getUserByEmail(String email) {
+    public UserDto getUserDtoByEmail(String email) {
+        User user = getUserByEmail(email);
+        return userMapper.toDto(user);
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
         return userRepository.findByEmail(email)
-                .map(userMapper::toDto)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         messageService.generateMessage("error.entity.not_found", email))
                 );
