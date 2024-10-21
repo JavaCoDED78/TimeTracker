@@ -39,7 +39,7 @@ public class TimeRecord implements BaseEntity<Long> {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "c_project_state")
-    private ProjectState projectState;
+    private Status status;
 
     @Column(name = "c_start_time")
     private LocalDateTime startTime;

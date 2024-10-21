@@ -3,7 +3,7 @@ package com.javaded78.timetracker.mapper;
 import com.javaded78.timetracker.dto.project.ProjectDto;
 import com.javaded78.timetracker.dto.project.ProjectStateDto;
 import com.javaded78.timetracker.model.Project;
-import com.javaded78.timetracker.model.ProjectState;
+import com.javaded78.timetracker.model.Status;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -19,5 +19,5 @@ public interface ProjectMapper extends Mappable<Project, ProjectDto> {
     @Override
     ProjectDto toDto(Project entity);
 
-    ProjectStateDto toStateDto(Project entity, ProjectState state);
+    ProjectStateDto toStateDto(Project entity, Status state);
 }

@@ -6,7 +6,7 @@ import com.javaded78.timetracker.dto.project.ProjectStateDto;
 import com.javaded78.timetracker.exception.ResourceNotFoundException;
 import com.javaded78.timetracker.mapper.ProjectMapper;
 import com.javaded78.timetracker.model.Project;
-import com.javaded78.timetracker.model.ProjectState;
+import com.javaded78.timetracker.model.Status;
 import com.javaded78.timetracker.model.TimeRecord;
 import com.javaded78.timetracker.repository.ProjectRepository;
 import com.javaded78.timetracker.service.MessageSourceService;
@@ -82,10 +82,10 @@ public class DefaultProjectService implements ProjectService {
         Project newProject = getProjectById(id);
         TimeRecord record = new TimeRecord();
         record.setProject(newProject);
-        record.setProjectState(ProjectState.ONGOING);
+        record.setStatus(Status.ONGOING);
         record.setStartTime(LocalDateTime.now());
         TimeRecord savedTimeRecord = timeRecordService.save(record);
-        return projectMapper.toStateDto(newProject, savedTimeRecord.getProjectState());
+        return projectMapper.toStateDto(newProject, savedTimeRecord.getStatus());
     }
 
     @Override
@@ -94,9 +94,9 @@ public class DefaultProjectService implements ProjectService {
         Project newProject = getProjectById(id);
         TimeRecord record = timeRecordService.getStaringRecord(newProject);
         record.setEndTime(LocalDateTime.now());
-        record.setProjectState(ProjectState.USER_STOPPED);
+        record.setStatus(Status.USER_STOPPED);
         timeRecordService.save(record);
-        return projectMapper.toStateDto(record.getProject(), ProjectState.USER_STOPPED);
+        return projectMapper.toStateDto(record.getProject(), Status.USER_STOPPED);
     }
 
 }
