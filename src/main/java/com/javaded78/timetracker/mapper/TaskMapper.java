@@ -13,6 +13,7 @@ public interface TaskMapper extends Mappable<Task, TaskResponseDto> {
     @Mapping(target = "status", ignore = true)
     Task updatedToEntity(TaskUpdateDto taskUpdateDto);
 
+    @Mapping(target = "status", ignore = true)
     @Mapping(target = "id", ignore = true)
     Task cratedToEntity(TaskCreateDto taskCreateDto);
 }

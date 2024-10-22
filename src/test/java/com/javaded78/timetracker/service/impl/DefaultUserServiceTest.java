@@ -36,9 +36,6 @@ public class DefaultUserServiceTest {
     @MockBean
     private BCryptPasswordEncoder passwordEncoder;
 
-    @MockBean
-    private DefaultMessageSourceService messageSourceService;
-
     @Autowired
     private DefaultUserService userService;
 

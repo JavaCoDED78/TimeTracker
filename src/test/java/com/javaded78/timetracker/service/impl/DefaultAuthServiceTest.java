@@ -38,16 +38,7 @@ public class DefaultAuthServiceTest {
     private AuthenticationManager authenticationManager;
 
     @MockBean
-    private DefaultMessageSourceService messageSourceService;
-
-    @MockBean
     private DefaultUserService userService;
-
-    @MockBean
-    private UserRepository userRepository;
-
-    @MockBean
-    private TaskRepository taskRepository;
 
     @MockBean
     private JwtTokenProvider tokenProvider;

@@ -58,7 +58,6 @@ public class UserController {
     @Operation(summary = "Get all users")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<PaginatedResponse<UserResponseDto>> getAll(Pageable pageable) {
-        System.out.println(pageable.toString());
         Page<User> users = userService.getAll(pageable);
         Page<UserResponseDto> userDtos = users.map(userMapper::toDto);
         return ResponseEntity.ok(new PaginatedResponse<>(userDtos));

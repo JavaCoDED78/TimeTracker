@@ -10,10 +10,9 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface UserMapper extends Mappable<User, UserResponseDto> {
 
-
-    @Mapping(target = "id", ignore = true)
     @Mapping(target = "tasks", ignore = true)
     @Mapping(target = "roles", ignore = true)
+    @Mapping(target = "id", ignore = true)
     User createdToEntity(UserCreateDto userCreateDto);
 
     @Mapping(target = "tasks", ignore = true)
