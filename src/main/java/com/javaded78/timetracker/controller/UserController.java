@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,6 +40,7 @@ public class UserController {
     private final TaskMapper taskMapper;
 
     @PutMapping
+    @PreAuthorize("@customSecurityExpression.canAccessUser(#userUpdateDto.id)")
     public ResponseEntity<UserResponseDto> update(@Validated @RequestBody UserUpdateDto userUpdateDto) {
         User user = userMapper.updatedToEntity(userUpdateDto);
         User updatedUser = userService.update(user);
@@ -46,6 +48,7 @@ public class UserController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<PaginatedResponse<UserResponseDto>> getAll(Pageable pageable) {
         Page<User> users = userService.getAll(pageable);
         Page<UserResponseDto> userDtos = users.map(userMapper::toDto);
@@ -53,24 +56,28 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@customSecurityExpression.canAccessUser(#id)")
     public ResponseEntity<UserResponseDto> getById(@PathVariable Long id) {
         User user = userService.getById(id);
         return ResponseEntity.ok(userMapper.toDto(user));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("@customSecurityExpression.canAccessUser(#id)")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         userService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}/tasks")
+    @PreAuthorize("@customSecurityExpression.canAccessUser(#id)")
     public ResponseEntity<List<TaskResponseDto>> getTasksByUserId(@PathVariable Long id) {
         List<Task> tasks = taskService.getAllByUserId(id);
         return ResponseEntity.ok(taskMapper.toDto(tasks));
     }
 
     @PostMapping("/{id}/tasks")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<TaskResponseDto> createTask(@PathVariable Long id, @Validated @RequestBody TaskCreateDto taskCreateDto) {
         Task task = taskMapper.cratedToEntity(taskCreateDto);
         Task createdTask = taskService.create(task, id);

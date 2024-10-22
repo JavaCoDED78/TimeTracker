@@ -8,6 +8,7 @@ import com.javaded78.timetracker.model.Task;
 import com.javaded78.timetracker.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +27,7 @@ public class TaskController {
     private final TaskMapper taskMapper;
 
     @PutMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<TaskResponseDto> update(@Validated @RequestBody TaskUpdateDto taskUpdateDto) {
         Task task = taskMapper.updatedToEntity(taskUpdateDto);
         Task updatedTask = taskService.update(task);
@@ -33,12 +35,14 @@ public class TaskController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@customSecurityExpression.canAccessTask(#id)")
     public ResponseEntity<TaskResponseDto> getById(@PathVariable Long id) {
         Task task = taskService.getById(id);
         return ResponseEntity.ok().body(taskMapper.toDto(task));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("@customSecurityExpression.canAccessTask(#id)")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         taskService.delete(id);
         return ResponseEntity.noContent().build();

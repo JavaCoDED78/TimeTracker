@@ -49,9 +49,7 @@ public class ApplicationConfig {
 
     @Bean
     @SneakyThrows
-    public SecurityFilterChain filterChain(
-            final HttpSecurity httpSecurity
-    ) {
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) {
         httpSecurity
                 .csrf(CsrfConfigurer::disable)
                 .cors(Customizer.withDefaults())
@@ -77,8 +75,7 @@ public class ApplicationConfig {
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .anyRequest().authenticated())
                 .anonymous(AbstractHttpConfigurer::disable)
-                .addFilterBefore(new JwtTokenFilter(tokenProvider),
-                        UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtTokenFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
     }

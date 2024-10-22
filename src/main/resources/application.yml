@@ -29,8 +29,8 @@ spring:
 security:
   jwt:
     secret: ${JWT_SECRET}
-    access: 1
-    refresh: 30
+    access: 10
+    refresh: 300
 
 logging:
   level:
