@@ -20,4 +20,6 @@ public interface TaskService {
     Task create(Task task, Long userId);
 
     void delete(Long id);
+
+    Page<Task> getAll(Pageable pageable);
 }
