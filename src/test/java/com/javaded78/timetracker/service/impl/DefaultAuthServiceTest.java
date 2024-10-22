@@ -1,4 +1,4 @@
-package com.javaded78.timetracker.impl;
+package com.javaded78.timetracker.service.impl;
 
 import com.javaded78.timetracker.config.TestConfig;
 import com.javaded78.timetracker.dto.auth.JwtRequest;
@@ -9,9 +9,6 @@ import com.javaded78.timetracker.model.User;
 import com.javaded78.timetracker.repository.TaskRepository;
 import com.javaded78.timetracker.repository.UserRepository;
 import com.javaded78.timetracker.security.JwtTokenProvider;
-import com.javaded78.timetracker.service.impl.DefaultAuthService;
-import com.javaded78.timetracker.service.impl.DefaultMessageSourceService;
-import com.javaded78.timetracker.service.impl.DefaultUserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
