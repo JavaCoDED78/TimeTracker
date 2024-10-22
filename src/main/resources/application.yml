@@ -25,3 +25,13 @@ spring:
   docker:
     compose:
       lifecycle-management: start_only
+
+security:
+  jwt:
+    secret: ${JWT_SECRET}
+    access: 1
+    refresh: 30
+
+logging:
+  level:
+    org.springframework.security: trace

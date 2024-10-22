@@ -3,10 +3,8 @@ package com.javaded78.timetracker.controller;
 import com.javaded78.timetracker.dto.PaginatedResponse;
 import com.javaded78.timetracker.dto.task.TaskCreateDto;
 import com.javaded78.timetracker.dto.task.TaskResponseDto;
-import com.javaded78.timetracker.dto.user.UserCreateDto;
 import com.javaded78.timetracker.dto.user.UserResponseDto;
 import com.javaded78.timetracker.dto.user.UserUpdateDto;
-import com.javaded78.timetracker.dto.validation.OnCreate;
 import com.javaded78.timetracker.mapper.TaskMapper;
 import com.javaded78.timetracker.mapper.UserMapper;
 import com.javaded78.timetracker.model.Task;
@@ -16,7 +14,6 @@ import com.javaded78.timetracker.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,15 +37,6 @@ public class UserController {
     private final TaskService taskService;
     private final UserMapper userMapper;
     private final TaskMapper taskMapper;
-
-    @PostMapping()
-    public ResponseEntity<UserResponseDto> register(
-            @Validated
-            @RequestBody final UserCreateDto userCreateDto) {
-        User user = userMapper.createdToEntity(userCreateDto);
-        User registeredUser = userService.register(user);
-        return new ResponseEntity<>(userMapper.toDto(registeredUser), HttpStatus.CREATED);
-    }
 
     @PutMapping
     public ResponseEntity<UserResponseDto> update(@Validated @RequestBody UserUpdateDto userUpdateDto) {
@@ -83,7 +71,7 @@ public class UserController {
     }
 
     @PostMapping("/{id}/tasks")
-    public ResponseEntity<TaskResponseDto> createTask(@PathVariable Long id,  @Validated @RequestBody TaskCreateDto taskCreateDto) {
+    public ResponseEntity<TaskResponseDto> createTask(@PathVariable Long id, @Validated @RequestBody TaskCreateDto taskCreateDto) {
         Task task = taskMapper.cratedToEntity(taskCreateDto);
         Task createdTask = taskService.create(task, id);
         return ResponseEntity.ok(taskMapper.toDto(createdTask));
