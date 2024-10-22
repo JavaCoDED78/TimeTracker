@@ -24,8 +24,6 @@ public record TaskUpdateDto(
 
         @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
-        LocalDateTime expirationDate,
-
-        Status status
+        LocalDateTime expirationDate
 ) {
 }

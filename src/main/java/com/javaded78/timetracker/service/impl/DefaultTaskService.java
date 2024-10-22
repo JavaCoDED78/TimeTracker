@@ -56,8 +56,8 @@ public class DefaultTaskService implements TaskService {
         existing.setTitle(task.getTitle());
         existing.setDescription(task.getDescription());
         existing.setExpirationDate(task.getExpirationDate());
-        taskRepository.save(task);
-        return task;
+        taskRepository.save(existing);
+        return existing;
     }
 
     @Override

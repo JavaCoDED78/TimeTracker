@@ -10,6 +10,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface TaskMapper extends Mappable<Task, TaskResponseDto> {
 
+    @Mapping(target = "status", ignore = true)
     Task updatedToEntity(TaskUpdateDto taskUpdateDto);
 
     @Mapping(target = "id", ignore = true)
