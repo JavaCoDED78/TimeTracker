@@ -14,6 +14,7 @@ import com.javaded78.timetracker.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +39,7 @@ import java.util.List;
         name = "User Controller",
         description = "User API"
 )
+@Slf4j
 public class UserController {
 
     private final UserService userService;
@@ -49,6 +51,7 @@ public class UserController {
     @Operation(summary = "Update user")
     @PreAuthorize("@customSecurityExpression.canAccessUser(#userUpdateDto.id)")
     public ResponseEntity<UserResponseDto> update(@Validated @RequestBody UserUpdateDto userUpdateDto) {
+        log.info("Received request to update user with {}", userUpdateDto);
         User user = userMapper.updatedToEntity(userUpdateDto);
         User updatedUser = userService.update(user);
         return ResponseEntity.ok(userMapper.toDto(updatedUser));
@@ -58,6 +61,7 @@ public class UserController {
     @Operation(summary = "Get all users")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<PaginatedResponse<UserResponseDto>> getAll(Pageable pageable) {
+        log.info("Received request to get all users with pageable {}", pageable);
         Page<User> users = userService.getAll(pageable);
         Page<UserResponseDto> userDtos = users.map(userMapper::toDto);
         return ResponseEntity.ok(new PaginatedResponse<>(userDtos));
@@ -67,6 +71,7 @@ public class UserController {
     @Operation(summary = "Get UserDto by id")
     @PreAuthorize("@customSecurityExpression.canAccessUser(#id)")
     public ResponseEntity<UserResponseDto> getById(@PathVariable Long id) {
+        log.info("Received to get user by id: {}", id);
         User user = userService.getById(id);
         return ResponseEntity.ok(userMapper.toDto(user));
     }
@@ -75,6 +80,7 @@ public class UserController {
     @Operation(summary = "Delete user by id")
     @PreAuthorize("@customSecurityExpression.canAccessUser(#id)")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
+        log.info("Received request to delete user by id {}", id);
         userService.delete(id);
         return ResponseEntity.noContent().build();
     }
@@ -83,6 +89,7 @@ public class UserController {
     @Operation(summary = "Get all User tasks")
     @PreAuthorize("@customSecurityExpression.canAccessUser(#id)")
     public ResponseEntity<List<TaskResponseDto>> getTasksByUserId(@PathVariable Long id) {
+        log.info("Received request to get tasks by user id {}", id);
         List<Task> tasks = taskService.getAllByUserId(id);
         return ResponseEntity.ok(taskMapper.toDto(tasks));
     }
@@ -90,7 +97,10 @@ public class UserController {
     @PostMapping("/{id}/tasks")
     @Operation(summary = "Add task to user")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<TaskResponseDto> createTask(@PathVariable Long id, @Validated @RequestBody TaskCreateDto taskCreateDto) {
+    public ResponseEntity<TaskResponseDto> createTask(@PathVariable Long id,
+                                                      @Validated @RequestBody TaskCreateDto taskCreateDto
+    ) {
+        log.info("Received request to create task {} for user id {}", taskCreateDto, id);
         Task task = taskMapper.cratedToEntity(taskCreateDto);
         Task createdTask = taskService.create(task, id);
         return ResponseEntity.ok(taskMapper.toDto(createdTask));

@@ -10,6 +10,7 @@ import com.javaded78.timetracker.service.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
         name = "Task Controller",
         description = "Task API"
 )
+@Slf4j
 public class TaskController {
 
     private final TaskService taskService;
@@ -41,6 +43,7 @@ public class TaskController {
     @Operation(summary = "Get all tasks")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<PaginatedResponse<TaskResponseDto>> getAll(Pageable pageable) {
+        log.info("Received request to get all tasks with pageable {}", pageable);
         Page<Task> tasks = taskService.getAll(pageable);
         Page<TaskResponseDto> taskDtos = tasks.map(taskMapper::toDto);
         return ResponseEntity.ok(new PaginatedResponse<>(taskDtos));
@@ -50,6 +53,7 @@ public class TaskController {
     @Operation(summary = "Update task")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<TaskResponseDto> update(@Validated @RequestBody TaskUpdateDto taskUpdateDto) {
+        log.info("Received request to update task with dto {}", taskUpdateDto);
         Task task = taskMapper.updatedToEntity(taskUpdateDto);
         Task updatedTask = taskService.update(task);
         return ResponseEntity.ok().body(taskMapper.toDto(updatedTask));
@@ -59,6 +63,7 @@ public class TaskController {
     @Operation(summary = "Get task by id")
     @PreAuthorize("@customSecurityExpression.canAccessTask(#id)")
     public ResponseEntity<TaskResponseDto> getById(@PathVariable Long id) {
+        log.info("Received request to get task by id: {}", id);
         Task task = taskService.getById(id);
         return ResponseEntity.ok().body(taskMapper.toDto(task));
     }
@@ -67,6 +72,7 @@ public class TaskController {
     @Operation(summary = "Delete task by id")
     @PreAuthorize("@customSecurityExpression.canAccessTask(#id)")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
+        log.info("Received request to delete task by id: {}", id);
         taskService.delete(id);
         return ResponseEntity.noContent().build();
     }
@@ -75,6 +81,7 @@ public class TaskController {
     @Operation(summary = "Start time record for task")
     @PreAuthorize("@customSecurityExpression.canAccessTask(#id)")
     public ResponseEntity<TaskResponseDto> start(@PathVariable Long id) {
+        log.info("Received request to start time record for task with id: {}", id);
         Task task = taskService.start(id);
         return ResponseEntity.ok(taskMapper.toDto(task));
     }
@@ -83,6 +90,7 @@ public class TaskController {
     @Operation(summary = "Stop time record for task")
     @PreAuthorize("@customSecurityExpression.canAccessTask(#id)")
     public ResponseEntity<TaskResponseDto> stop(@PathVariable Long id) {
+        log.info("Received request to stop time record for task with id: {}", id);
         Task task = taskService.stop(id);
         return ResponseEntity.ok(taskMapper.toDto(task));
     }

@@ -7,12 +7,14 @@ import com.javaded78.timetracker.security.JwtTokenProvider;
 import com.javaded78.timetracker.service.AuthService;
 import com.javaded78.timetracker.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class DefaultAuthService implements AuthService {
 
     private final AuthenticationManager authenticationManager;
@@ -28,7 +30,7 @@ public class DefaultAuthService implements AuthService {
         );
 
         User user = userService.getByUsername(loginRequest.username());
-        return new JwtResponse(
+        JwtResponse jwtResponse = new JwtResponse(
                 user.getId(),
                 user.getUsername(),
                 jwtTokenProvider.createAccessToken(
@@ -38,10 +40,14 @@ public class DefaultAuthService implements AuthService {
                 ),
                 jwtTokenProvider.createRefreshToken(user.getId(), user.getUsername())
         );
+        log.info("User {} logged in", user.getUsername());
+        return jwtResponse;
     }
 
     @Override
     public JwtResponse refresh(String refreshToken) {
-        return jwtTokenProvider.refreshUserTokens(refreshToken);
+        JwtResponse jwtResponse = jwtTokenProvider.refreshUserTokens(refreshToken);
+        log.info("User {} refreshed token", jwtResponse.username());
+        return jwtResponse;
     }
 }

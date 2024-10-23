@@ -1,12 +1,15 @@
 package com.javaded78.timetracker.config;
 
+import com.javaded78.timetracker.repository.RecordRepository;
 import com.javaded78.timetracker.repository.TaskRepository;
 import com.javaded78.timetracker.repository.UserRepository;
 import com.javaded78.timetracker.security.JwtTokenProvider;
 import com.javaded78.timetracker.security.JwtUserDetailsService;
 import com.javaded78.timetracker.security.props.JwtProperties;
 import com.javaded78.timetracker.service.MessageSourceService;
+import com.javaded78.timetracker.service.RecordService;
 import com.javaded78.timetracker.service.impl.DefaultAuthService;
+import com.javaded78.timetracker.service.impl.DefaultRecordService;
 import com.javaded78.timetracker.service.impl.DefaultTaskService;
 import com.javaded78.timetracker.service.impl.DefaultUserService;
 import lombok.RequiredArgsConstructor;
@@ -61,8 +64,13 @@ public class TestConfig {
 
     @Bean
     @Primary
-    public DefaultTaskService taskService(TaskRepository taskRepository, MessageSourceService messageSourceService) {
-        return new DefaultTaskService(taskRepository, messageSourceService);
+    public DefaultTaskService taskService(TaskRepository taskRepository, MessageSourceService messageSourceService, RecordService recordService) {
+        return new DefaultTaskService(taskRepository, messageSourceService, recordService);
+    }
+
+    @Bean
+    public DefaultRecordService recordService(RecordRepository recordRepository, MessageSourceService messageSourceService) {
+        return new DefaultRecordService(recordRepository, messageSourceService);
     }
 
     @Bean
@@ -85,6 +93,11 @@ public class TestConfig {
     @Bean
     public TaskRepository taskRepository() {
         return Mockito.mock(TaskRepository.class);
+    }
+
+    @Bean
+    public RecordRepository recordRepository() {
+        return Mockito.mock(RecordRepository.class);
     }
 
     @Bean

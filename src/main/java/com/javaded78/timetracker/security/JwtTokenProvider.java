@@ -12,6 +12,7 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,6 +29,7 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class JwtTokenProvider {
 
     private final JwtProperties jwtProperties;
@@ -48,7 +50,9 @@ public class JwtTokenProvider {
                 .add("roles", resolveRoles(roles))
                 .build();
         Instant validity = Instant.now().plus(jwtProperties.getAccess(), ChronoUnit.HOURS);
-        return compactClams(claims, validity);
+        String accessToken = compactClams(claims, validity);
+        log.info("Access token created");
+        return accessToken;
     }
 
     public String createRefreshToken(Long userId, String username) {
@@ -57,7 +61,9 @@ public class JwtTokenProvider {
                 .add("id", userId)
                 .build();
         Instant validity = Instant.now().plus(jwtProperties.getRefresh(), ChronoUnit.DAYS);
-        return compactClams(claims, validity);
+        String refreshToken = compactClams(claims, validity);
+        log.info("Refresh token created");
+        return refreshToken;
     }
 
     public JwtResponse refreshUserTokens(String refreshToken) {
@@ -66,12 +72,14 @@ public class JwtTokenProvider {
         }
         Long userId = Long.valueOf(extractIdFromToken(refreshToken));
         User user = userService.getById(userId);
-        return JwtResponse.builder()
+        JwtResponse jwtResponse = JwtResponse.builder()
                 .id(userId)
                 .username(user.getUsername())
                 .accessToken(createAccessToken(userId, user.getUsername(), user.getRoles()))
                 .refreshToken(createRefreshToken(userId, user.getUsername()))
                 .build();
+        log.info("Jwt tokens created");
+        return jwtResponse;
     }
 
     private String extractIdFromToken(String token) {
@@ -84,13 +92,15 @@ public class JwtTokenProvider {
     }
 
     public boolean isValid(String token) {
-        return Jwts.parser()
+        boolean isValid = Jwts.parser()
                 .verifyWith(key)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload()
                 .getExpiration()
                 .after(new Date());
+        log.info("Token is valid");
+        return isValid;
     }
 
     public Authentication getAuthentication(String token) {

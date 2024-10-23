@@ -35,3 +35,4 @@ build/
 ### Additional ###
 .env
 !/src/main/resources/db-init/
+!/logs/

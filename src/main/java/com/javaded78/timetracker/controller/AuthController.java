@@ -11,6 +11,7 @@ import com.javaded78.timetracker.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
         name = "Auth Controller",
         description = "Auth API"
 )
+@Slf4j
 public class AuthController {
 
     private final AuthService authService;
@@ -38,14 +40,16 @@ public class AuthController {
     @PostMapping("/login")
     @Operation(summary = "Login user")
     public ResponseEntity<JwtResponse> login(@Validated @RequestBody final JwtRequest loginRequest) {
+        log.info("Received login request: {}", loginRequest);
         return ResponseEntity.ok(authService.login(loginRequest));
     }
 
     @PostMapping("/register")
     @Operation(summary = "Register new user")
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<UserResponseDto> register(
             @Validated @RequestBody final UserCreateDto userCreateDto) {
+        log.info("Received register request: {}", userCreateDto);
         User user = userMapper.createdToEntity(userCreateDto);
         User registeredUser = userService.register(user);
         return new ResponseEntity<>(userMapper.toDto(registeredUser), HttpStatus.CREATED);
@@ -56,6 +60,7 @@ public class AuthController {
     public ResponseEntity<JwtResponse> refreshToken(
             @RequestBody final String refreshToken
     ) {
+        log.info("Received refresh token request: {}", refreshToken);
         return ResponseEntity.ok(authService.refresh(refreshToken));
     }
 }

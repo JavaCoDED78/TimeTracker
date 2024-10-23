@@ -9,6 +9,7 @@ import com.javaded78.timetracker.service.MessageSourceService;
 import com.javaded78.timetracker.service.RecordService;
 import com.javaded78.timetracker.service.TaskService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class DefaultTaskService implements TaskService {
 
     private final TaskRepository taskRepository;
@@ -30,23 +32,29 @@ public class DefaultTaskService implements TaskService {
 
     @Override
     public Task getById(Long id) {
-        return taskRepository.findById(id)
+         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         messageService.generateMessage("error.entity.id.not_found", id))
                 );
+         log.info("Task with id: {} found", id);
+         return task;
     }
 
     @Override
     public List<Task> getAllByUserId(Long id) {
-        return taskRepository.findAllByUserId(id);
+        List<Task> tasks = taskRepository.findAllByUserId(id);
+        log.info("Tasks for user with id: {} found", id);
+        return tasks;
     }
 
 
     @Override
     public List<Task> getAllSoonTasks(Duration duration) {
         LocalDateTime now = LocalDateTime.now();
-        return taskRepository.findAllSoonTasks(Timestamp.valueOf(now),
+        List<Task> tasks = taskRepository.findAllSoonTasks(Timestamp.valueOf(now),
                 Timestamp.valueOf(now.plus(duration)));
+        log.info("Tasks with soon expiration date found");
+        return tasks;
     }
 
     @Override
@@ -62,6 +70,7 @@ public class DefaultTaskService implements TaskService {
         existing.setDescription(task.getDescription());
         existing.setExpirationDate(task.getExpirationDate());
         taskRepository.save(existing);
+        log.info("Task with id: {} updated", task.getId());
         return existing;
     }
 
@@ -73,6 +82,7 @@ public class DefaultTaskService implements TaskService {
         }
         taskRepository.save(task);
         taskRepository.assignTask(userId, task.getId());
+        log.info("Task with id: {} for user with id: {} created", task.getId(), userId);
         return task;
     }
 
@@ -80,11 +90,14 @@ public class DefaultTaskService implements TaskService {
     @Transactional
     public void delete(Long id) {
         taskRepository.deleteById(id);
+        log.info("Task with id: {} deleted", id);
     }
 
     @Override
     public Page<Task> getAll(Pageable pageable) {
-        return taskRepository.findAll(pageable);
+        Page<Task> tasks = taskRepository.findAll(pageable);
+        log.info("Tasks with pageable: {} found", pageable);
+        return tasks;
     }
 
     @Override
@@ -96,7 +109,9 @@ public class DefaultTaskService implements TaskService {
         record.setTask(task);
         record.setStartTime(LocalDateTime.now());
         recordService.add(record);
-        return taskRepository.save(task);
+        Task started = taskRepository.save(task);
+        log.info("Task with id: {} started time record", id);
+        return started;
     }
 
     @Override
@@ -106,14 +121,18 @@ public class DefaultTaskService implements TaskService {
         Record record = recordService.getByTaskId(task.getId());
         recordService.update(record);
         task.setStatus(Status.DONE);
-        return taskRepository.save(task);
+        Task stopped = taskRepository.save(task);
+        log.info("Task with id: {} stopped time record", id);
+        return stopped;
     }
 
     @Override
     public Task getByIdAndStatus(Long id, Status status) {
-        return taskRepository.findByIdAndStatus(id, status)
+        Task task = taskRepository.findByIdAndStatus(id, status)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         messageService.generateMessage("error.task.not_found", id))
                 );
+        log.info("Task with id: {} and status: {} found", id, status);
+        return task;
     }
 }

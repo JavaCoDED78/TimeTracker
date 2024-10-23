@@ -7,6 +7,7 @@ import com.javaded78.timetracker.repository.UserRepository;
 import com.javaded78.timetracker.service.MessageSourceService;
 import com.javaded78.timetracker.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,6 +19,7 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class DefaultUserService implements UserService {
 
     private final UserRepository userRepository;
@@ -26,23 +28,29 @@ public class DefaultUserService implements UserService {
 
     @Override
     public Page<User> getAll(Pageable pageable) {
-        return userRepository.findAll(pageable);
+        Page<User> users = userRepository.findAll(pageable);
+        log.info("Users with pageable: {} found", pageable);
+        return users;
     }
 
     @Override
     public User getById(Long id) {
-        return userRepository.findById(id)
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         messageSourceService.generateMessage("error.entity.id.not_found", id))
                 );
+        log.info("User with id: {} found", id);
+        return user;
     }
 
     @Override
     public User getByUsername(String username) {
-        return userRepository.findByUsername(username)
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         messageSourceService.generateMessage("error.entity.username.not_found", username))
                 );
+        log.info("User with username: {} found", username);
+        return user;
     }
 
     @Override
@@ -54,6 +62,7 @@ public class DefaultUserService implements UserService {
         user.setUsername(user.getUsername());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
+        log.info("User with id: {} updated", user.getId());
         return user;
     }
 
@@ -69,6 +78,7 @@ public class DefaultUserService implements UserService {
         Set<Role> roles = Set.of(Role.ROLE_USER);
         user.setRoles(roles);
         userRepository.save(user);
+        log.info("User with id: {} created", user.getId());
         return user;
     }
 
@@ -79,17 +89,18 @@ public class DefaultUserService implements UserService {
 
     @Override
     public User getTaskAuthor(Long taskId) {
-        return userRepository.findTaskAuthor(taskId)
+        User user = userRepository.findTaskAuthor(taskId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         messageSourceService.generateMessage("error.entity.id.not_found", taskId))
                 );
+        log.info("User with task id: {} found", taskId);
+        return user;
     }
 
     @Override
     @Transactional
     public void delete(Long id) {
         userRepository.deleteById(id);
+        log.info("User with id: {} deleted", id);
     }
 }
-
-
