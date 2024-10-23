@@ -43,7 +43,7 @@ public class AuthController {
 
     @PostMapping("/register")
     @Operation(summary = "Register new user")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<UserResponseDto> register(
             @Validated @RequestBody final UserCreateDto userCreateDto) {
         User user = userMapper.createdToEntity(userCreateDto);

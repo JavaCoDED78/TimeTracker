@@ -35,7 +35,7 @@ public class CustomSecurityExpression {
     public boolean canAccessTask(Long taskId) {
         JwtEntity user = getPrincipal();
         Long id = user.getId();
-        return userService.isTaskOwner(id, taskId);
+        return userService.isTaskOwner(id, taskId) || hasAnyRole(Role.ROLE_ADMIN);
     }
 
     private JwtEntity getPrincipal() {

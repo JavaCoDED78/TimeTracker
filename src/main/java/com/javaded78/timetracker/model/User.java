@@ -53,9 +53,17 @@ public class User implements BaseEntity<Long> {
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "users_roles")
     @Enumerated(value = EnumType.STRING)
-    private Set<Role> roles = new HashSet<>();
+    private Set<Role> roles;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinTable(inverseJoinColumns = @JoinColumn(name = "task_id"))
-    private List<Task> tasks = new ArrayList<>();
+    private List<Task> tasks;
+
+    public List<Task> getTasks() {
+        return tasks == null ? new ArrayList<>() : tasks;
+    }
+
+    public Set<Role> getRoles() {
+        return roles == null ? new HashSet<>() : roles;
+    }
 }

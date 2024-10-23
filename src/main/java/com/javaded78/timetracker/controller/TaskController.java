@@ -18,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -68,5 +69,21 @@ public class TaskController {
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         taskService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/start")
+    @Operation(summary = "Start time record for task")
+    @PreAuthorize("@customSecurityExpression.canAccessTask(#id)")
+    public ResponseEntity<TaskResponseDto> start(@PathVariable Long id) {
+        Task task = taskService.start(id);
+        return ResponseEntity.ok(taskMapper.toDto(task));
+    }
+
+    @PostMapping("/{id}/stop")
+    @Operation(summary = "Stop time record for task")
+    @PreAuthorize("@customSecurityExpression.canAccessTask(#id)")
+    public ResponseEntity<TaskResponseDto> stop(@PathVariable Long id) {
+        Task task = taskService.stop(id);
+        return ResponseEntity.ok(taskMapper.toDto(task));
     }
 }

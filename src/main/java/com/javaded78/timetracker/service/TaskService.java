@@ -1,5 +1,6 @@
 package com.javaded78.timetracker.service;
 
+import com.javaded78.timetracker.model.Status;
 import com.javaded78.timetracker.model.Task;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,4 +23,10 @@ public interface TaskService {
     void delete(Long id);
 
     Page<Task> getAll(Pageable pageable);
+
+    Task getByIdAndStatus(Long id, Status status);
+
+    Task start(Long id);
+
+    Task stop(Long id);
 }
