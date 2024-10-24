@@ -14,7 +14,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Entity
 @Table(name = "tasks")
@@ -42,6 +41,6 @@ public class Task implements BaseEntity<Long> {
     private LocalDateTime expirationDate;
 
     public Record getRecord() {
-        return record != null ? record : new Record(); // Или другой объект по умолчанию
+        return record != null ? record : new Record();
     }
 }
