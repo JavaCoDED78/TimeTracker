@@ -4,14 +4,14 @@ import com.javaded78.timetracker.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    Optional<User> findByUsername(String username);
+    Optional<User> findByUsername(
+            String username
+    );
 
     @Query(value = """
             SELECT u.id as id,
@@ -23,7 +23,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
             JOIN users u ON ut.user_id = u.id
             WHERE ut.task_id = :taskId
             """, nativeQuery = true)
-    Optional<User> findTaskAuthor(@Param("taskId") Long taskId);
+    Optional<User> findTaskAuthor(
+            @Param("taskId") Long taskId
+    );
 
     @Query(value = """
              SELECT exists(
@@ -32,5 +34,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
                            WHERE user_id = :userId
                              AND task_id = :taskId)
             """, nativeQuery = true)
-    boolean isTaskOwner(@Param("userId") Long userId, @Param("taskId") Long taskId);
+    boolean isTaskOwner(
+            @Param("userId") Long userId,
+            @Param("taskId") Long taskId
+    );
+
 }

@@ -39,7 +39,8 @@ public class JwtTokenProvider {
 
     @PostConstruct
     public void init() {
-        this.key = Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes());
+        this.key = Keys.hmacShaKeyFor(jwtProperties
+                        .getSecret().getBytes());
     }
 
     public String createAccessToken(Long userId, String username, Set<Role> roles) {

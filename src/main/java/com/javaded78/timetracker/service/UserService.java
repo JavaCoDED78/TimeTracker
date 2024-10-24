@@ -21,4 +21,5 @@ public interface UserService {
     User getTaskAuthor(Long taskId);
 
     void delete(Long id);
+
 }

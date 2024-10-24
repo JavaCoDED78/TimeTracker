@@ -1,5 +1,6 @@
 package com.javaded78.timetracker.security;
 
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
@@ -20,7 +21,8 @@ public class JwtTokenFilter extends GenericFilterBean {
     @Override
     @SneakyThrows
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) {
-        Optional<String> maybeBearerToken = jwtTokenProvider.resolveToken((HttpServletRequest) servletRequest);
+        Optional<String> maybeBearerToken = jwtTokenProvider
+                .resolveToken((HttpServletRequest) servletRequest);
         try {
             maybeBearerToken.ifPresent(this::onValidToken);
         } catch (Exception ignored) {

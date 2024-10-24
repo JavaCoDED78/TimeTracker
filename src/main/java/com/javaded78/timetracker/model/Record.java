@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -38,5 +39,6 @@ public class Record implements BaseEntity<Long> {
     public void setTask(Task task) {
         task.setRecord(this);
         this.task = task;
+
     }
 }

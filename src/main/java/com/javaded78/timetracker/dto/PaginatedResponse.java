@@ -20,4 +20,5 @@ public class PaginatedResponse<T> {
         this.totalElements = page.getTotalElements();
         this.totalPages = page.getTotalPages();
     }
+
 }

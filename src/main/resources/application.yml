@@ -30,7 +30,7 @@ security:
   jwt:
     secret: ${JWT_SECRET}
     access: 10
-    refresh: 10
+    refresh: 300
 
 logging:
   level:

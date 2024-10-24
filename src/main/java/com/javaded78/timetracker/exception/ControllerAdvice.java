@@ -69,7 +69,7 @@ public class ControllerAdvice {
     @ExceptionHandler(AuthenticationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionBody handleAuthentication(AuthenticationException e) {
-        return new ExceptionBody("Authentication failed. Please try again with correct credentials"
+        return new ExceptionBody("Authentication failed." + " PLEASE TRY AGAIN WITH CORRECT CREDENTIALS"
         );
     }
 
