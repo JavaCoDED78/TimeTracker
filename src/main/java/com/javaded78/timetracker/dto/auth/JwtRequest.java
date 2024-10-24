@@ -19,7 +19,7 @@ public record JwtRequest(
 
         @Schema(
                 description = "password",
-                example = "123456"
+                example = "qwerty"
         )
         @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
         @Size(min = 6, max = 32, message = "{user.password.size}")

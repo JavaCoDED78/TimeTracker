@@ -40,7 +40,7 @@ public record UserUpdateDto(
                 description = "User firstname",
                 example = "John"
         )
-        @Size(min = 5, max = 50, message = "{user.firstname.size}")
+        @Size(min = 2, max = 50, message = "{user.firstname.size}")
         @NotBlank(message = "{user.firstname.notnull}")
         String firstname,
 
@@ -48,7 +48,7 @@ public record UserUpdateDto(
                 description = "User lastname",
                 example = "Doe"
         )
-        @Size(min = 5, max = 50, message = "{user.lastname.size}")
+        @Size(min = 2, max = 50, message = "{user.lastname.size}")
         @NotBlank(message = "{user.lastname.notnull}")
         String lastname) {
 }

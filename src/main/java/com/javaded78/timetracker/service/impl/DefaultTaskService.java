@@ -8,6 +8,7 @@ import com.javaded78.timetracker.repository.TaskRepository;
 import com.javaded78.timetracker.service.MessageSourceService;
 import com.javaded78.timetracker.service.RecordService;
 import com.javaded78.timetracker.service.TaskService;
+import com.javaded78.timetracker.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -29,6 +30,7 @@ public class DefaultTaskService implements TaskService {
     private final TaskRepository taskRepository;
     private final MessageSourceService messageService;
     private final RecordService recordService;
+    private final UserService userService;
 
     @Override
     public Task getById(Long id) {
@@ -42,6 +44,7 @@ public class DefaultTaskService implements TaskService {
 
     @Override
     public List<Task> getAllByUserId(Long id) {
+        userService.getById(id);
         List<Task> tasks = taskRepository.findAllByUserId(id);
         log.info("Tasks for user with id: {} found", id);
         return tasks;

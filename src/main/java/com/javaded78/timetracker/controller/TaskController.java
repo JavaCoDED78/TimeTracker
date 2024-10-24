@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +42,7 @@ public class TaskController {
     @GetMapping
     @Operation(summary = "Get all tasks")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<PaginatedResponse<TaskResponseDto>> getAll(Pageable pageable) {
+    public ResponseEntity<PaginatedResponse<TaskResponseDto>> getAll(@ParameterObject Pageable pageable) {
         log.info("Received request to get all tasks with pageable {}", pageable);
         Page<Task> tasks = taskService.getAll(pageable);
         Page<TaskResponseDto> taskDtos = tasks.map(taskMapper::toDto);
@@ -78,7 +79,7 @@ public class TaskController {
 
     @PostMapping("/{id}/start")
     @Operation(summary = "Start time record for task")
-    @PreAuthorize("@customSecurityExpression.canAccessTask(#id)")
+    @PreAuthorize("@customSecurityExpression.canAccessTaskAction(#id)")
     public ResponseEntity<TaskResponseDto> start(@PathVariable Long id) {
         log.info("Received request to start time record for task with id: {}", id);
         Task task = taskService.start(id);
@@ -87,7 +88,7 @@ public class TaskController {
 
     @PostMapping("/{id}/stop")
     @Operation(summary = "Stop time record for task")
-    @PreAuthorize("@customSecurityExpression.canAccessTask(#id)")
+    @PreAuthorize("@customSecurityExpression.canAccessTaskAction(#id)")
     public ResponseEntity<TaskResponseDto> stop(@PathVariable Long id) {
         log.info("Received request to stop time record for task with id: {}", id);
         Task task = taskService.stop(id);

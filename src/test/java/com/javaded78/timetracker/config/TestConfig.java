@@ -8,6 +8,7 @@ import com.javaded78.timetracker.security.JwtUserDetailsService;
 import com.javaded78.timetracker.security.props.JwtProperties;
 import com.javaded78.timetracker.service.MessageSourceService;
 import com.javaded78.timetracker.service.RecordService;
+import com.javaded78.timetracker.service.UserService;
 import com.javaded78.timetracker.service.impl.DefaultAuthService;
 import com.javaded78.timetracker.service.impl.DefaultRecordService;
 import com.javaded78.timetracker.service.impl.DefaultTaskService;
@@ -64,8 +65,11 @@ public class TestConfig {
 
     @Bean
     @Primary
-    public DefaultTaskService taskService(TaskRepository taskRepository, MessageSourceService messageSourceService, RecordService recordService) {
-        return new DefaultTaskService(taskRepository, messageSourceService, recordService);
+    public DefaultTaskService taskService(TaskRepository taskRepository,
+                                          MessageSourceService messageSourceService,
+                                          RecordService recordService,
+                                          DefaultUserService userService) {
+        return new DefaultTaskService(taskRepository, messageSourceService, recordService, userService);
     }
 
     @Bean

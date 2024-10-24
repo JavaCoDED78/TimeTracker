@@ -62,8 +62,4 @@ public class User implements BaseEntity<Long> {
     public List<Task> getTasks() {
         return tasks == null ? new ArrayList<>() : tasks;
     }
-
-    public Set<Role> getRoles() {
-        return roles == null ? new HashSet<>() : roles;
-    }
 }

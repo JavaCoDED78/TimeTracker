@@ -5,6 +5,7 @@ import com.javaded78.timetracker.exception.ResourceNotFoundException;
 import com.javaded78.timetracker.model.Status;
 import com.javaded78.timetracker.model.Task;
 import com.javaded78.timetracker.repository.TaskRepository;
+import com.javaded78.timetracker.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -32,6 +33,9 @@ public class DefaultTaskServiceTest {
 
     @MockBean
     private TaskRepository taskRepository;
+
+    @MockBean
+    private DefaultUserService userService;
 
     @Autowired
     private DefaultTaskService taskService;

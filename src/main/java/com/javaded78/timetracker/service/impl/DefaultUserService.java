@@ -61,7 +61,7 @@ public class DefaultUserService implements UserService {
         existing.setLastname(user.getLastname());
         user.setUsername(user.getUsername());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+        userRepository.save(existing);
         log.info("User with id: {} updated", user.getId());
         return user;
     }

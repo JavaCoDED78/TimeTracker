@@ -33,9 +33,13 @@ public class CustomSecurityExpression {
     }
 
     public boolean canAccessTask(Long taskId) {
+        return canAccessTaskAction(taskId) || hasAnyRole(Role.ROLE_ADMIN);
+    }
+
+    public boolean canAccessTaskAction(Long taskId) {
         JwtEntity user = getPrincipal();
         Long id = user.getId();
-        return userService.isTaskOwner(id, taskId) || hasAnyRole(Role.ROLE_ADMIN);
+        return userService.isTaskOwner(id, taskId);
     }
 
     private JwtEntity getPrincipal() {

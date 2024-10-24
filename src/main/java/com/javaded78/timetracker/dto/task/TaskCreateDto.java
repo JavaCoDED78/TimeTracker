@@ -25,11 +25,12 @@ public record TaskCreateDto(
         )
         @Size(max = 5000, message = "{task.description.size}")
         String description,
-
         @Schema(
                 description = "Time when the task expires",
-                example = "2024-01-01 12:00"
+                example = "2024-01-01 12:00",
+                type = "string"
         )
+
         @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
         LocalDateTime expirationDate

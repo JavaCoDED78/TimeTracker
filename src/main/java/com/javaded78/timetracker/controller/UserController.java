@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -60,7 +61,7 @@ public class UserController {
     @GetMapping
     @Operation(summary = "Get all users")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<PaginatedResponse<UserResponseDto>> getAll(Pageable pageable) {
+    public ResponseEntity<PaginatedResponse<UserResponseDto>> getAll(@ParameterObject Pageable pageable) {
         log.info("Received request to get all users with pageable {}", pageable);
         Page<User> users = userService.getAll(pageable);
         Page<UserResponseDto> userDtos = users.map(userMapper::toDto);
