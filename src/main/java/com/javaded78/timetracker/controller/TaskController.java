@@ -1,6 +1,5 @@
 package com.javaded78.timetracker.controller;
 
-
 import com.javaded78.timetracker.dto.PaginatedResponse;
 import com.javaded78.timetracker.dto.task.TaskResponseDto;
 import com.javaded78.timetracker.dto.task.TaskUpdateDto;

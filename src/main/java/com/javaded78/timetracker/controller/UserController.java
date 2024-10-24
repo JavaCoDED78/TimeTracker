@@ -106,4 +106,3 @@ public class UserController {
         return ResponseEntity.ok(taskMapper.toDto(createdTask));
     }
 }
-

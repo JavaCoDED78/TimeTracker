@@ -24,5 +24,4 @@ public class DefaultMessageSourceService implements MessageSourceService {
         String messageFormat = generateMessage(messageKey);
         return String.format(messageFormat, messageArgs);
     }
-
 }
