@@ -1,6 +1,5 @@
 package com.javaded78.timetracker.security;
 
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;

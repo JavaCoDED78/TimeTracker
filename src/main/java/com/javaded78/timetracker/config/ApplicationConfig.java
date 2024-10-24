@@ -1,6 +1,5 @@
 package com.javaded78.timetracker.config;
 
-
 import com.javaded78.timetracker.security.JwtTokenFilter;
 import com.javaded78.timetracker.security.JwtTokenProvider;
 import io.swagger.v3.oas.models.Components;
@@ -10,7 +9,6 @@ import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -37,7 +35,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class ApplicationConfig {
 
     private final JwtTokenProvider tokenProvider;
-    private final ApplicationContext applicationContext;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
